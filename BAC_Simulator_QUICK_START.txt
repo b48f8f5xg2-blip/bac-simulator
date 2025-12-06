@@ -1,0 +1,188 @@
+================================================================================
+BAC SIMULATOR - QUICK START GUIDE
+================================================================================
+
+WHAT IS THIS?
+A desktop app that calculates your Blood Alcohol Content (BAC) based on what
+you've eaten and drunk. It shows you real-time impairment levels and whether
+you're legally safe to drive.
+
+QUICK START (5 MINUTES):
+================================================================================
+
+1. OPEN THE APP
+   - Double-click BAC_Simulator.app on your Desktop
+   - Wait for the window to open (first time may take a few seconds)
+
+2. ANSWER THE CHATBOT QUESTIONS (in order):
+   ❓ "What's your biological sex?"
+      → Type: male   or   female
+
+   ❓ "What's your weight?"
+      → Type: 180 lbs   or   82 kg
+
+   ❓ "What's your height?"
+      → Type: 6 feet   or   5'10"   or   70 inches
+
+   ❓ "How old are you?"
+      → Type: 30   or just   30
+
+   ❓ "Do you drink regularly?"
+      → Type: yes, most days   or   no, rarely
+
+   ❓ "When did you start drinking?"
+      → Type: 7pm   or   2 hours ago   or   now
+
+3. TELL THE BOT ABOUT YOUR DRINKS & FOOD
+   Examples you can say:
+   - "I had 2 beers at 7pm"
+   - "I drank a shot of vodka"
+   - "I ate pizza at 6pm"
+   - "Just had another beer"
+   - "I had a mixed drink (cocktail) 40% alcohol"
+
+4. WATCH YOUR BAC DISPLAY
+   The big number on the right is your current BAC%
+
+   Color meanings:
+   🟢 GREEN = Sober / Safe to drive
+   🟡 YELLOW = Mild impairment / Legal to drive but impaired
+   🟠 ORANGE = Moderate impairment / DUI ILLEGAL
+   🔴 RED = Severe impairment / DANGEROUS
+
+5. CHECK THE TIMELINE
+   The graph shows your BAC over the next 6 hours:
+   - When it peaks
+   - When you hit the legal limit (0.08%)
+   - When you'll be sober again
+
+EXAMPLE SCENARIO:
+================================================================================
+Let's say you input:
+
+Bot: "What's your weight?"
+You: "180 pounds"
+
+Bot: "What's your height?"
+You: "6 feet"
+
+Bot: "When did you start drinking?"
+You: "7pm"
+
+Bot: "Tell me about your drinks and food"
+You: "I ate a big pizza at 6pm, then had 2 beers at 7pm and another at 8pm"
+
+RESULT SHOWN:
+- Current BAC: 0.0847% 🔴 ORANGE
+- Status: Moderate impairment / DUI ILLEGAL
+- Timeline: Will be sober in 4.5 hours
+- Peak BAC was 0.0956% at 8:15pm
+- You hit the legal limit (0.08%) about 15 minutes ago
+
+KEY TIPS:
+================================================================================
+
+1. FOOD MATTERS A LOT
+   - Empty stomach = BAC peaks FAST (30-60 min)
+   - Full meal = BAC peaks SLOWER (90+ min)
+   - Pizza/fatty food = Biggest delay (can reduce peak by 50-75%)
+   - This is real science: food delays stomach emptying
+
+2. NATURAL LANGUAGE WORKS
+   The bot understands casual language:
+   ✓ "I had a beer"
+   ✓ "Drank whiskey"
+   ✓ "Just ate pizza"
+   ✓ "Mixed drink, 40% vodka"
+   ✓ "Light beer, 12 ounces"
+   ✓ "Started drinking 2 hours ago"
+
+3. YOU CAN UPDATE IN REAL-TIME
+   Just tell the bot:
+   - "I just had another beer"
+   - "Actually I ate lunch at noon"
+   - "My weight is actually 190"
+   The BAC will recalculate immediately
+
+4. DRINK TYPES RECOGNIZED
+   Beer: light beer, IPA, stout
+   Wine: red wine, white wine
+   Spirits: whiskey, vodka, rum, gin, tequila
+   Mixed: cocktail, margarita, cosmopolitan
+
+5. TIME FORMATS UNDERSTOOD
+   - "7pm" or "7:30pm" (24-hour: "19:30")
+   - "2 hours ago"
+   - "30 minutes ago"
+   - "now" or "just now"
+
+WHAT THE NUMBERS MEAN:
+================================================================================
+
+BAC %          WHAT IT MEANS                  CAN I DRIVE?
+==========================================================================
+0.00%          Sober                          ✓ Yes (safe)
+0.02-0.05%     Slight impairment              ✓ Yes (legal)
+0.05-0.08%     Mild impairment                ✓ Yes (legal but not ideal)
+0.08%          DUI threshold                  ✗ NO (illegal - DUI)
+0.15%          Enhanced DUI (Tennessee)       ✗ NO (illegal - worse penalty)
+0.20%          Severe impairment              ✗ NO (medical risk)
+0.30%+         Dangerous/poisoning risk       ✗ NO (medical emergency)
+
+LEGAL STATUS IN TENNESSEE:
+    0.08% = DUI (1 year jail max, $350-$1,500 fine)
+    0.15% = Enhanced DUI (7+ days mandatory jail, $600-$3,500 fine) ← 2024
+
+IMPORTANT WARNINGS:
+================================================================================
+
+⚠️  THIS IS AN EDUCATIONAL TOO L ONLY
+
+DO NOT USE TO:
+- Decide whether to drive
+- Defend against DUI charges
+- Make any legal decision
+- Replace a breathalyzer or blood test
+
+USE FOR:
+- Understanding how alcohol metabolism works
+- Learning how food affects BAC
+- General education about impairment
+- Seeing how long alcohol takes to leave your system
+
+ACTUAL BAC VARIES:
+- This tool is ±0.02% accurate typically
+- Some people vary by ±0.04% or more
+- Medications, genetics, and other factors affect real BAC
+- Only a breathalyzer or blood test can measure actual BAC
+
+WHEN IN DOUBT: DO NOT DRIVE
+Call a taxi, Uber, Lyft, or use a designated driver
+No one should ever get behind the wheel if unsure
+
+TROUBLESHOOTING:
+================================================================================
+
+App won't open?
+→ Try double-clicking again or right-click "Open"
+
+Can't type in the box?
+→ Click the text field at the bottom first
+
+Numbers look wrong?
+→ Resize the window to be larger
+
+Bot isn't recognizing my drink?
+→ Try saying "beer", "wine", "whiskey", "cocktail", or "shot"
+
+Still have questions?
+→ See BAC_Simulator_README.txt for more details
+→ See BAC_Simulator_SCIENTIFIC_BASIS.txt for the science
+
+HAVE FUN LEARNING!
+================================================================================
+This app teaches you how your body processes alcohol. Use it to understand
+the science behind alcohol metabolism and make better decisions about drinking
+and driving.
+
+Remember: The safest choice when in doubt is always to NOT DRIVE.

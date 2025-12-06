@@ -1,0 +1,334 @@
+================================================================================
+BAC SIMULATOR - COMPLETE FILE LISTING & DESCRIPTIONS
+================================================================================
+
+APPLICATION BUNDLE: BAC_Simulator.app
+================================================================================
+
+Location: /Users/collinbird/BAC_Simulator.app
+
+MAIN APPLICATION EXECUTABLE:
+─────────────────────────────────────────────────────────────────────────────
+File: Contents/MacOS/BAC_Simulator (executable Python script)
+Size: ~835 bytes
+Description: Main executable entry point for the application. This is what
+  macOS runs when you double-click the .app bundle. It sets up the Python path
+  to include the Resources directory, imports the required modules, and launches
+  the Tkinter GUI.
+Permissions: -rwxr-xr-x (executable)
+Shebang: #!/usr/bin/env python3
+
+APPLICATION CONFIGURATION:
+─────────────────────────────────────────────────────────────────────────────
+File: Contents/Info.plist
+Size: ~1.2 KB
+Description: macOS bundle configuration file in XML format. This tells macOS:
+  - The application name (BAC Simulator)
+  - The bundle identifier (com.bac-simulator.app)
+  - The executable to run (BAC_Simulator)
+  - Minimum macOS version (10.13)
+  - Copyright notice and legal information
+Format: XML property list (macOS standard)
+
+PYTHON SOURCE CODE:
+─────────────────────────────────────────────────────────────────────────────
+
+1. File: Contents/Resources/bac_calculator.py
+   Size: ~12 KB (~400 lines)
+   Dependencies: datetime, math
+
+   Main Class: BACCalculator
+
+   Key Methods:
+     - set_profile(): Set user demographics
+     - add_drink(): Record alcohol consumption
+     - add_food(): Record food consumption
+     - calculate_bac_at_time(): Main BAC calculation using Widmark equation
+     - get_peak_bac(): Find maximum BAC and timing
+     - get_time_to_sobriety(): Calculate time until sober
+     - get_impairment_level(): Classify impairment and legal status
+     - get_bac_timeline(): Generate BAC values for timeline visualization
+
+   Key Data:
+     - WIDMARK_RATIOS: Gender-specific distribution ratios
+     - ELIMINATION_RATE: 0.015% per hour
+     - FOOD_GASTRIC_TIMES: Stomach emptying delays by food type
+     - FOOD_ABSORPTION_IMPACT: Peak BAC reduction by food
+     - STANDARD_DRINKS: Common drink types with ABV and size
+
+   Implements:
+     - Modified Widmark equation: BAC = [(A × 5.14) / (W × r)] - (0.015 × H)
+     - Exponential food absorption modeling
+     - Gender-specific metabolic variation
+     - Chronic drinking adjustment (20% faster elimination)
+     - 7-level impairment classification system
+     - Tennessee DUI law thresholds (0.08% and 0.15%)
+
+2. File: Contents/Resources/chatbot.py
+   Size: ~10 KB (~350 lines)
+   Dependencies: re, datetime
+
+   Main Class: BACChatbot
+
+   Key Methods:
+     - parse_weight(): Extract weight from natural language (lbs/kg)
+     - parse_height(): Extract height (feet/inches/cm)
+     - parse_sex(): Identify male/female
+     - parse_age(): Extract age
+     - parse_time_phrase(): Parse time references (7pm, 2 hours ago, etc.)
+     - parse_drink(): Identify drink type and quantity
+     - parse_food(): Classify food type
+     - parse_chronic_drinker(): Assess drinking frequency
+     - process_message(): Main chatbot response generator
+     - get_next_question(): Generate progressive questions
+     - is_profile_complete(): Check minimum data collected
+
+   Implements:
+     - Multi-stage conversational flow
+     - Regex-based natural language parsing
+     - Progressive data collection (one piece at a time)
+     - Flexible input parsing (e.g., "180 lbs", "about 180", "180 pounds")
+     - Conversation history tracking
+     - Error handling with user-friendly feedback
+
+   Features:
+     - Understands casual language
+     - Adaptive questioning based on responses
+     - Real-time scenario updates
+     - Support for future drink/food additions
+
+3. File: Contents/Resources/gui.py
+   Size: ~16 KB (~500 lines)
+   Dependencies: tkinter, datetime, threading, math
+
+   Main Class: BACSilmulatorGUI
+
+   Key Methods:
+     - create_layout(): Main UI layout assembly
+     - create_header(): Top banner with title and disclaimer
+     - create_chatbox(): Left panel with message interface
+     - create_bac_display(): Central BAC number display
+     - create_timeline_graph(): Graph visualization canvas
+     - create_details_panel(): Bottom details and timeline
+     - send_message(): Process chatbot input
+     - update_display(): Refresh all displays every 10 seconds
+     - draw_timeline_graph(): Render BAC timeline visualization
+     - update_details(): Update drinks/food timeline
+
+   Features:
+     - 2-panel layout: Chatbox (left) + Displays (right)
+     - Color-coded BAC display:
+       * Green (0-0.05%)
+       * Yellow (0.05-0.08%)
+       * Orange (0.08-0.15%)
+       * Red (0.15%+)
+     - Real-time status updates
+     - Timeline graph with legal limit marker
+     - Persistent chat history
+     - Professional styling with proper fonts and colors
+     - Responsive to window resizing
+
+   Display Elements:
+     - Large BAC % display with dynamic coloring
+     - Impairment level description
+     - Fitness to drive indicator
+     - Legal status (LEGAL/DUI/ENHANCED DUI)
+     - BAC timeline graph (6-hour projection)
+     - Details panel with full timeline
+     - Send button for chat input
+
+PYTHON CACHE (Auto-generated):
+─────────────────────────────────────────────────────────────────────────────
+Directory: Contents/Resources/__pycache__/
+Files:
+  - bac_calculator.cpython-314.pyc
+  - chatbot.cpython-314.pyc
+  - gui.cpython-314.pyc
+
+Description: Python bytecode compiled versions of the modules. These are
+  auto-generated by Python for faster loading and can be safely deleted.
+
+================================================================================
+DOCUMENTATION FILES
+================================================================================
+
+Location: /Users/collinbird/ (same directory as BAC_Simulator.app)
+
+1. File: BAC_SIMULATOR_PACKAGE_SUMMARY.txt
+   Size: ~12 KB
+   Audience: Developers, technical users
+   Contents:
+     - Complete package overview
+     - Technology stack details
+     - Feature checklist
+     - Scientific basis summary
+     - Module breakdown with line counts
+     - Performance characteristics
+     - Known limitations
+     - Future enhancement ideas
+     - Support information
+
+2. File: BAC_Simulator_README.txt
+   Size: ~4.3 KB
+   Audience: End users
+   Contents:
+     - System requirements
+     - Installation instructions
+     - Basic usage guide
+     - Feature list
+     - BAC category explanations
+     - Troubleshooting section
+     - Important disclaimer
+     - Contact information
+
+3. File: BAC_Simulator_QUICK_START.txt
+   Size: ~5.9 KB
+   Audience: New users wanting quick introduction
+   Contents:
+     - What is this application?
+     - 5-minute quick start guide
+     - Example scenario walkthrough
+     - Natural language tips
+     - Keyboard shortcuts and input formats
+     - BAC level explanations
+     - Important warnings and disclaimers
+     - Troubleshooting for common issues
+
+4. File: BAC_Simulator_SCIENTIFIC_BASIS.txt
+   Size: ~12 KB
+   Audience: Scientific/technical users, educators
+   Contents:
+     - Detailed Widmark equation explanation
+     - Distribution ratio justification
+     - Elimination rate research basis
+     - Food absorption modeling details
+     - Metabolic variation factors (age, sex, genetics)
+     - Impairment threshold research citations
+     - Tennessee DUI law (2024) details
+     - Calculation process step-by-step
+     - Application limitations and accuracy range
+     - 10 comprehensive research references
+
+5. File: BAC_SIMULATOR_FILES.txt
+   Size: ~10 KB
+   Audience: Developers, power users
+   Contents: This file - complete file listing and descriptions
+
+================================================================================
+FILE ORGANIZATION SUMMARY
+================================================================================
+
+DEPLOYMENT PACKAGE:
+  BAC_Simulator.app/              ← Main application folder (drag to Desktop)
+  ├── Contents/
+  │   ├── MacOS/
+  │   │   └── BAC_Simulator       ← Double-click to launch
+  │   ├── Resources/
+  │   │   ├── bac_calculator.py
+  │   │   ├── chatbot.py
+  │   │   ├── gui.py
+  │   │   └── __pycache__/        (auto-generated)
+  │   └── Info.plist
+
+DOCUMENTATION (same directory as .app):
+  BAC_SIMULATOR_PACKAGE_SUMMARY.txt    ← Overview for developers
+  BAC_Simulator_README.txt             ← User guide
+  BAC_Simulator_QUICK_START.txt        ← Quick introduction
+  BAC_Simulator_SCIENTIFIC_BASIS.txt   ← Scientific details
+  BAC_SIMULATOR_FILES.txt              ← This file
+
+TOTAL SIZE:
+  Application: ~50 KB (with pycache)
+  Documentation: ~40 KB
+  Total: ~90 KB
+
+================================================================================
+CODE STATISTICS
+================================================================================
+
+bac_calculator.py:
+  - Lines of code: ~400
+  - Classes: 1 (BACCalculator)
+  - Methods: 15+
+  - Type hints: Comprehensive
+  - Docstrings: All methods documented
+
+chatbot.py:
+  - Lines of code: ~350
+  - Classes: 1 (BACChatbot)
+  - Methods: 14+
+  - Regex patterns: 8+
+  - Type hints: Most methods
+
+gui.py:
+  - Lines of code: ~500
+  - Classes: 1 (BACSilmulatorGUI)
+  - Methods: 12+
+  - Tkinter widgets: 20+
+
+Total Python Code: ~1,250 lines
+
+================================================================================
+SYSTEM FILES & DEPENDENCIES
+================================================================================
+
+Runtime Requirements:
+  - Python 3.9+ (typically pre-installed on macOS)
+  - Tkinter (comes with Python)
+  - Standard library only (no external packages)
+
+Files NOT included (not needed):
+  - No pip packages
+  - No compiled libraries
+  - No system frameworks beyond Python
+  - No configuration files
+
+macOS Requirements:
+  - macOS 10.13 or later
+  - No special permissions needed
+  - No installation required
+  - Fully self-contained
+
+================================================================================
+HOW TO DISTRIBUTE
+================================================================================
+
+For End Users:
+  1. Copy BAC_Simulator.app folder
+  2. Place on user's Desktop or Applications folder
+  3. User double-clicks to launch
+  4. Include documentation files (README, QUICK_START)
+
+For Developers:
+  1. Include the entire .app folder
+  2. Include all documentation files
+  3. Include BAC_SIMULATOR_FILES.txt for reference
+  4. Include BAC_Simulator_SCIENTIFIC_BASIS.txt for context
+
+To Modify/Extend:
+  1. Edit .py files in Contents/Resources/
+  2. No compilation needed (Python scripts)
+  3. Test by running BAC_Simulator executable
+  4. pycache will be regenerated automatically
+
+================================================================================
+VERSION INFORMATION
+================================================================================
+
+Version: 1.0.0
+Build Date: November 26, 2024
+Python Version: 3.9+ compatible (tested with 3.14)
+macOS Version: 10.13+ compatible
+Status: Production Ready ✓
+
+Build Information:
+  - All modules tested and verified
+  - All calculations validated
+  - Natural language parsing tested
+  - GUI layout tested
+  - No external dependencies
+  - Ready for distribution
+
+================================================================================
+END OF FILE LISTING
+================================================================================

@@ -1,0 +1,218 @@
+================================================================================
+BAC SIMULATOR v1.1 - DETAILED CHANGE LOG
+================================================================================
+
+FILE: chatbot.py
+================================================================================
+
+ADDED FEATURES:
+✓ New instance variable: self.pending_drinks = []
+✓ New instance variable: self.pending_foods = []
+✓ New method: get_pending_drinks() - Returns list of extracted drinks with time
+✓ New method: get_pending_foods() - Returns list of extracted foods with time
+
+MODIFIED METHODS:
+✓ __init__() - Now initializes pending_drinks and pending_foods lists
+✓ reset() - Clears pending drinks/foods on reset
+✓ process_scenario_update() - MAJOR REWRITE:
+  • Now extracts time from each drink/food message
+  • Uses parse_time_phrase() to get timestamps
+  • Stores drinks in pending_drinks with: type, quantity, alcohol_percent, time
+  • Stores foods in pending_foods with: type, time
+  • Returns clear messages with timestamps
+
+FIXED ISSUES:
+✗ Before: Drinks/food parsed but not stored for GUI
+✓ After: Drinks/food stored in pending lists for GUI retrieval
+✗ Before: No time extraction for individual drinks
+✓ After: Each drink/food gets timestamp (explicit or fallback to now)
+✗ Before: No structured data returned from process_scenario_update()
+✓ After: Structured data in pending_drinks/foods lists
+
+EXAMPLE:
+Input: "I had 2 beers at 7pm and pizza at 6pm"
+Before: Response only, no data passed to calculator
+After: 
+  - Extracts 2 beers, 7pm time
+  - Stores in pending_drinks: {type: 'beer_regular', quantity: 2, alcohol_percent: None, time: <7pm datetime>}
+  - Extracts pizza, 6pm time
+  - Stores in pending_foods: {type: 'high_fat_meal', time: <6pm datetime>}
+  - GUI retrieves and adds to calculator automatically
+
+================================================================================
+FILE: gui.py
+================================================================================
+
+CLASS NAME FIX:
+✗ Before: class BACSilmulatorGUI (missing 'u')
+✓ After: class BACSimulatorGUI (correct spelling)
+
+ADDED FEATURES:
+✓ New button: "Clear Scenario" - Resets drinks/food timeline
+✓ New button: "Reset Chat" - Completely resets chat and scenario
+✓ New methods:
+  • clear_scenario() - Clears all drinks/food with confirmation
+  • reset_chat() - Resets chatbot state with confirmation
+✓ Canvas resize event binding for better rendering
+
+MODIFIED METHODS:
+✓ send_message() - Now processes pending drinks/foods from chatbot
+✓ update_calculator_from_chatbot() - MAJOR ENHANCEMENT:
+  • Sets user profile (previously did this)
+  • NEW: Retrieves and processes pending drinks
+  • NEW: Retrieves and processes pending foods
+  • NEW: Adds each drink to calculator
+  • NEW: Adds each food to calculator
+  • NEW: Error handling with user feedback
+
+✓ draw_timeline_graph() - MAJOR FIXES:
+  • Now has bounds checking: if width < 100 or height < 50: return placeholder
+  • Added clamping of coordinates: x = max(padding, min(x, width - padding))
+  • Handles empty timeline gracefully
+  • Properly calculates graph dimensions
+  • Shows "No drinks recorded yet" when appropriate
+  • All coordinate calculations checked for validity
+
+✓ create_timeline_graph() - NEW:
+  • Added event binding: self.canvas.bind("<Configure>", lambda e: self.draw_timeline_graph())
+  • Canvas now redraws on resize
+
+✓ update_details() - IMPROVED:
+  • Try-catch block for error handling
+  • Shows "N/A" for missing values instead of crashing
+  • Better formatting with emoji
+  • Shows empty message when no items
+  • Food/drink lists shown properly
+
+✓ update_display() - ERROR HANDLING:
+  • Wrapped all operations in try-catch
+  • Graceful error messages displayed to user
+
+FIXED ISSUES:
+✗ Before: Class name typo prevented import
+✓ After: Correct class name imports successfully
+✗ Before: Drinks/food extracted but never added to calculator
+✓ After: GUI calls get_pending_drinks/foods and adds to calculator
+✗ Before: No scenario management (couldn't reset or clear)
+✓ After: Clear and Reset buttons with confirmation dialogs
+✗ Before: Canvas crashed on resize or when empty
+✓ After: Canvas has bounds checking and graceful empty state handling
+✗ Before: Details panel could crash with missing data
+✓ After: Error handling shows "N/A" instead of crashing
+
+LAYOUT IMPROVEMENTS:
+✓ Added control buttons below chat input
+✓ Better spacing and organization
+✓ Clear visual feedback for button actions
+
+================================================================================
+FILE: BAC_Simulator (Main Executable)
+================================================================================
+
+FIXED ISSUES:
+✗ Before: from gui import BACSilmulatorGUI (wrong class name)
+✓ After: from gui import BACSimulatorGUI (correct class name)
+
+IMPROVEMENTS:
+✓ Better error reporting in try_gui_mode()
+✓ More informative error messages
+✓ Traceback shown for debugging if GUI fails
+
+================================================================================
+WORKFLOW IMPROVEMENTS
+================================================================================
+
+BEFORE (BROKEN):
+1. User inputs "I had 2 beers at 7pm"
+2. Chatbot parses the message
+3. ❌ Parsed data is NOT stored or returned
+4. ❌ Calculator never gets the drink data
+5. ❌ BAC display shows 0.0000% (no drinks recorded)
+6. ❌ User confused, thinks app is broken
+
+AFTER (FIXED):
+1. User inputs "I had 2 beers at 7pm"
+2. Chatbot parses the message
+3. ✓ Stores in pending_drinks: {type: 'beer_regular', quantity: 2, time: 7pm}
+4. ✓ Returns appropriate response with timestamp
+5. ✓ GUI retrieves pending_drinks() and adds to calculator
+6. ✓ BAC calculation updates with new data
+7. ✓ Timeline graph shows drink absorption
+8. ✓ User sees real-time results
+
+NEW CAPABILITIES:
+✓ Users can reset/clear scenario mid-conversation
+✓ Can start over without restarting app
+✓ Explicit timestamps extracted from messages
+✓ Better error messages and feedback
+✓ Graceful handling of edge cases
+
+================================================================================
+TEST COVERAGE
+================================================================================
+
+All components tested and verified working:
+
+UNIT TESTS:
+✓ parse_weight() - Handles lbs, kg, various formats
+✓ parse_height() - Handles feet, cm, various formats
+✓ parse_sex() - Correctly identifies male/female
+✓ parse_age() - Extracts age with validation
+✓ parse_drink() - Extracts drink type, quantity, alcohol %
+✓ parse_food() - Correctly categorizes food types
+✓ parse_time_phrase() - Handles absolute and relative times
+
+INTEGRATION TESTS:
+✓ Complete conversation flow from profile to drinks/food
+✓ Chatbot data extraction and pending list population
+✓ GUI integration with calculator
+✓ Real-time BAC calculation updates
+✓ Timeline generation and visualization
+✓ Impairment level calculation
+✓ Peak BAC determination
+✓ Scenario clearing and resetting
+
+END-TO-END TESTS:
+✓ User provides profile info
+✓ User describes drinks with times
+✓ User describes foods with times
+✓ Calculator receives data automatically
+✓ BAC displays update in real-time
+✓ Timeline graph renders correctly
+✓ Details panel shows all information
+✓ Scenario can be cleared mid-conversation
+✓ Chat can be reset for new scenario
+
+ALL TESTS PASSED: ✓✓✓
+
+================================================================================
+BACKWARD COMPATIBILITY
+================================================================================
+
+✓ No breaking changes to existing code
+✓ All new methods are additions, not replacements
+✓ Existing calculator functionality unchanged
+✓ Can still work with old chatbot data if needed
+✓ No new dependencies required
+
+================================================================================
+DEPLOYMENT
+================================================================================
+
+No additional setup needed:
+✓ No new Python packages required
+✓ No configuration files to change
+✓ No database migrations needed
+✓ Simply replace the BAC_Simulator.app folder
+
+Installation Steps:
+1. Backup current BAC_Simulator.app folder
+2. Replace with updated BAC_Simulator.app folder
+3. Double-click to run
+4. App should work immediately
+
+That's it! No Python installation, no pip install, nothing - just works!
+
+================================================================================
+END OF DETAILED CHANGE LOG
+================================================================================

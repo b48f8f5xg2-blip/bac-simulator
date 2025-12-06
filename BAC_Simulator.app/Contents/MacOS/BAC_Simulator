@@ -1,0 +1,80 @@
+#!/Library/Frameworks/Python.framework/Versions/3.14/bin/python3
+"""
+BAC Simulator - Blood Alcohol Content Calculator
+Main executable script for macOS .app bundle
+Automatically chooses GUI or Terminal based on Tkinter availability
+"""
+import sys
+import os
+
+# Add Resources directory to Python path
+app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+resources_dir = os.path.join(app_dir, 'Resources')
+sys.path.insert(0, resources_dir)
+
+# Import application modules
+from bac_calculator import BACCalculator
+from chatbot import BACChatbot
+
+def try_gui_mode():
+    """Try to launch GUI mode"""
+    try:
+        import tkinter as tk
+        from gui import BACSimulatorGUI
+
+        # Create Tkinter root
+        root = tk.Tk()
+
+        # Create calculator and chatbot
+        calculator = BACCalculator()
+        chatbot = BACChatbot()
+
+        # Create GUI
+        app = BACSimulatorGUI(root, calculator, chatbot)
+
+        # Run application
+        root.mainloop()
+        return True
+
+    except Exception as e:
+        # GUI failed, will try terminal mode
+        print(f"GUI initialization error: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+def terminal_mode():
+    """Launch terminal-based interactive mode"""
+    from terminal_ui import TerminalUI
+
+    # Create calculator and chatbot
+    calculator = BACCalculator()
+    chatbot = BACChatbot()
+
+    # Create and run terminal UI
+    ui = TerminalUI(calculator, chatbot)
+    ui.run()
+
+def main():
+    """Main entry point - tries GUI first, falls back to terminal"""
+    # Try GUI mode first
+    if try_gui_mode():
+        return
+
+    # If GUI failed, use terminal mode
+    print("\n" + "=" * 70)
+    print("GUI mode unavailable (Tkinter issue). Launching terminal mode...")
+    print("=" * 70)
+    terminal_mode()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nApplication closed.")
+        sys.exit(0)
+    except Exception as e:
+        print(f"\nError: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
