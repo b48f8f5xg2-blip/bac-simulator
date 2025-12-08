@@ -354,17 +354,29 @@ class BACSimulatorGUI:
     def draw_timeline_graph(self):
         """Draw BAC timeline"""
         self.canvas.delete("all")
-        
+
+        # Get canvas dimensions, use defaults if not yet rendered
+        self.canvas.update_idletasks()
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        
-        if width < 100 or height < 50:
-            return
-        
+
+        # Use minimum dimensions if canvas not ready
+        if width < 100:
+            width = 400
+        if height < 50:
+            height = 220
+
         timeline = self.calculator.get_bac_timeline(hours=6)
-        if not timeline or len(timeline) < 2:
+
+        # Check if there are any drinks to show
+        has_drinks = len(self.calculator.drinks_timeline) > 0
+
+        if not has_drinks:
             self.canvas.create_text(width//2, height//2, text="Add drinks to see timeline",
                                    fill=self.colors['secondary_text'], font=self.fonts['body_small'])
+            return
+
+        if not timeline:
             return
         
         # Draw graph
@@ -479,4 +491,4 @@ class BACSimulatorGUI:
         except:
             pass
         
-        self.root.after(10000, self.update_display)
+        self.root.after(2000, self.update_display)  # Update every 2 seconds for responsiveness

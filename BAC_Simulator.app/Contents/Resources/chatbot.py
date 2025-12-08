@@ -244,6 +244,76 @@ class BACChatbot:
 
         return None
 
+    def process_message(self, user_message: str) -> str:
+        """
+        Process user message during profile collection phase.
+        Parses input and updates collected_data based on what's currently being asked.
+        """
+        response = ""
+
+        # Try to parse sex
+        if self.collected_data['sex'] is None:
+            sex = self.parse_sex(user_message)
+            if sex:
+                self.collected_data['sex'] = sex
+                response = f"Got it, {sex}. "
+            else:
+                return "I didn't catch that. Please say 'male' or 'female'."
+
+        # Try to parse weight
+        elif self.collected_data['weight'] is None:
+            weight = self.parse_weight(user_message)
+            if weight:
+                self.collected_data['weight'] = weight
+                response = f"Got it, {weight:.0f} lbs. "
+            else:
+                return "I didn't understand. Please enter your weight (e.g., '180 lbs' or '82 kg')."
+
+        # Try to parse height
+        elif self.collected_data['height'] is None:
+            height = self.parse_height(user_message)
+            if height:
+                self.collected_data['height'] = height
+                feet = int(height // 12)
+                inches = int(height % 12)
+                response = f"Got it, {feet}'{inches}\". "
+            else:
+                return "I didn't understand. Please enter your height (e.g., '6 feet', '5'10\"', or '180 cm')."
+
+        # Try to parse age
+        elif self.collected_data['age'] is None:
+            age = self.parse_age(user_message)
+            if age:
+                self.collected_data['age'] = age
+                response = f"Got it, {age} years old. "
+            else:
+                return "I didn't catch that. Please enter your age as a number."
+
+        # Try to parse chronic drinker status
+        elif self.collected_data['chronic_drinker'] is None:
+            chronic = self.parse_chronic_drinker(user_message)
+            if chronic is not None:
+                self.collected_data['chronic_drinker'] = chronic
+                status = "regularly" if chronic else "occasionally"
+                response = f"Got it, you drink {status}. "
+            else:
+                return "I didn't understand. Do you drink regularly (yes) or rarely (no)?"
+
+        # Try to parse start time
+        elif self.collected_data['start_time'] is None:
+            start_time = self.parse_time_phrase(user_message)
+            if start_time:
+                self.collected_data['start_time'] = start_time
+                response = f"Got it, started at {start_time.strftime('%I:%M %p')}. "
+            else:
+                return "I didn't understand. When did you start drinking? (e.g., '7pm', '2 hours ago', 'now')"
+
+        # Profile complete
+        if self.is_profile_complete():
+            response += "Profile complete! Now tell me about your drinks and food."
+
+        return response
+
     def process_scenario_update(self, user_message: str) -> str:
         """Process updates to drinking/food scenario and extract data"""
         text_lower = user_message.lower()

@@ -126,28 +126,43 @@ class BACCalculator:
         minutes_elapsed = (reference_time - latest_food['time']).total_seconds() / 60
         return latest_food['type'], minutes_elapsed
 
-    def calculate_absorption_factor(self, drink_time: datetime) -> float:
+    def calculate_absorption_factor(self, drink_time: datetime, target_time: datetime = None) -> float:
         """
-        Calculate absorption factor (0-1, where 1 = fully absorbed) for a drink at given time.
-        Based on food state and gastric emptying model.
+        Calculate absorption factor (0-1, where 1 = fully absorbed) for a drink.
+        Based on food state at drink time and time elapsed since drinking.
+
+        Args:
+            drink_time: When the drink was consumed
+            target_time: Time at which to calculate absorption (default: now)
         """
-        food_type, minutes_since = self.get_most_recent_food(drink_time)
+        if target_time is None:
+            target_time = datetime.now()
+
+        # Time elapsed since drink was consumed (in minutes)
+        minutes_since_drink = max(0, (target_time - drink_time).total_seconds() / 60)
+
+        # Get food state at time of drink
+        food_type, minutes_since_food = self.get_most_recent_food(drink_time)
         gastric_half_time = self.FOOD_GASTRIC_TIMES.get(food_type, 90)
 
         if gastric_half_time == 0:  # Empty stomach
-            # Exponential absorption: ~80% in 30 min, ~95% in 60 min
-            return min(1.0, 1.0 - math.exp(-minutes_since / 20))
+            # Fast absorption: ~80% in 30 min, ~95% in 60 min
+            # Ensure minimum 10% immediate absorption
+            absorption = 0.10 + 0.90 * (1.0 - math.exp(-minutes_since_drink / 20))
+            return min(1.0, absorption)
         else:
-            # Food delays absorption using exponential model
-            # Stomach empties exponentially: Amount = Initial * 2^(-time/half_life)
-            stomach_content = 2 ** (-minutes_since / gastric_half_time)
+            # Food delays absorption
+            # Calculate effective delay based on how full stomach was
+            delay_factor = min(1.0, minutes_since_food / gastric_half_time)
 
-            # When stomach is nearly empty, absorption accelerates
-            if stomach_content < 0.1:
-                return min(1.0, 1.0 - math.exp(-(minutes_since - gastric_half_time) / 15))
+            # Adjust absorption rate based on food
+            # Full stomach: slower absorption, takes ~90-120 min to absorb fully
+            # As stomach empties, absorption speeds up
+            effective_absorption_time = minutes_since_drink * (0.5 + 0.5 * delay_factor)
 
-            # While stomach has food, minimal absorption (maybe 10-15%)
-            return stomach_content * 0.15
+            # Ensure minimum 10% immediate absorption even with food
+            absorption = 0.10 + 0.90 * (1.0 - math.exp(-effective_absorption_time / 30))
+            return min(1.0, absorption)
 
     def calculate_bac_at_time(self, target_time: datetime = None) -> float:
         """
@@ -174,19 +189,20 @@ class BACCalculator:
 
         for drink in self.drinks_timeline:
             if drink['time'] <= target_time:
-                # Time elapsed since this drink
-                time_elapsed = (target_time - drink['time']).total_seconds() / 3600
-
                 # Alcohol in this drink (liquid ounces)
                 alcohol_oz = drink['size_oz'] * (drink['alcohol_percent'] / 100)
 
-                # Absorption factor at time of drink consumption
-                absorption_factor = self.calculate_absorption_factor(drink['time'])
+                # Absorption factor accounts for food effects and time elapsed
+                absorption_factor = self.calculate_absorption_factor(drink['time'], target_time)
 
-                # Adjusted for food impact
+                # Food reduces peak BAC (applied separately from absorption timing)
                 food_type, _ = self.get_most_recent_food(drink['time'])
-                peak_reduction = self.FOOD_ABSORPTION_IMPACT.get(food_type, 0.3)
-                effective_alcohol_oz = alcohol_oz * (1 - peak_reduction) * absorption_factor
+                peak_reduction = self.FOOD_ABSORPTION_IMPACT.get(food_type, 0.0)
+
+                # Effective alcohol = actual alcohol * how much absorbed * food peak reduction
+                # Note: absorption_factor handles WHEN alcohol is absorbed
+                # peak_reduction handles HOW MUCH of the peak is reduced
+                effective_alcohol_oz = alcohol_oz * absorption_factor * (1 - peak_reduction * 0.5)
 
                 # Add to total
                 total_alcohol_absorbed += effective_alcohol_oz
@@ -204,13 +220,28 @@ class BACCalculator:
         bac = max(0.0, bac_from_absorption - elimination)
         return round(bac, 4)
 
-    def get_bac_timeline(self, hours: int = 12) -> List[Tuple[datetime, float]]:
-        """Generate BAC values for timeline visualization"""
+    def get_bac_timeline(self, hours: int = 6, from_now: bool = True) -> List[Tuple[datetime, float]]:
+        """
+        Generate BAC values for timeline visualization.
+
+        Args:
+            hours: Number of hours to project
+            from_now: If True, start from current time (future projection).
+                      If False, start from drinking start time (full history).
+        """
         timeline = []
-        current_time = self.start_time
-        end_time = self.start_time + timedelta(hours=hours)
+
+        if from_now:
+            # Future projection from current time
+            start = datetime.now()
+        else:
+            # Full history from when drinking started
+            start = self.start_time
+
+        end_time = start + timedelta(hours=hours)
 
         # Sample every 5 minutes
+        current_time = start
         while current_time <= end_time:
             bac = self.calculate_bac_at_time(current_time)
             timeline.append((current_time, bac))
