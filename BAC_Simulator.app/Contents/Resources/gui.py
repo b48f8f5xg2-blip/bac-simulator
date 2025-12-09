@@ -16,19 +16,32 @@ class BACSimulatorGUI:
         self.root.title("BAC Simulator")
         self.root.geometry("1400x900")
         
-        # Modern color palette (Apple-inspired)
+        # BAC Simulator Design System Colors
         self.colors = {
             'bg': '#FFFFFF',
             'secondary_bg': '#F5F5F7',
             'tertiary_bg': '#E8E8ED',
-            'text': '#1D1D1F',
+            'text': '#4A4A63',           # Dark Slate
             'secondary_text': '#6F6F77',
-            'accent': '#0071E3',
-            'accent_light': '#E8F0FE',
-            'green': '#34C759',
-            'orange': '#FF9500',
-            'red': '#FF3B30',
-            'border': '#D2D2D7'
+            'accent': '#00BFAE',          # Primary Teal
+            'accent_dark': '#004040',     # Dark Teal
+            'accent_light': '#E0F7F5',
+            'green': '#029922',           # Green Accent (safe)
+            'caution': '#F59E0B',         # Yellow (caution)
+            'orange': '#F97316',          # Orange (warning)
+            'red': '#EF4444',             # Red (danger)
+            'critical': '#991B1B',        # Dark red (critical)
+            'border': '#BFBEBE',          # Light Neutral
+            'neutral': '#BFBEBE'          # Light Neutral
+        }
+
+        # BAC status color mapping
+        self.bac_colors = {
+            'safe': '#029922',
+            'caution': '#F59E0B',
+            'warning': '#F97316',
+            'danger': '#EF4444',
+            'critical': '#991B1B'
         }
         
         self.setup_styles()
@@ -402,11 +415,23 @@ class BACSimulatorGUI:
                                    font=self.fonts['caption'], fill=self.colors['secondary_text'])
             self.canvas.create_line(padding - 5, y, padding, y, fill=self.colors['tertiary_bg'])
         
-        # Legal limit line
+        # Legal limit line (0.08%)
         if 0.08 <= max_bac:
             legal_y = height - padding - (0.08 / max_bac) * graph_height
             self.canvas.create_line(padding, legal_y, width - padding, legal_y,
-                                  fill=self.colors['red'], dash=(4, 4), width=1)
+                                  fill=self.colors['red'], dash=(6, 4), width=2)
+            self.canvas.create_text(width - padding - 60, legal_y - 10,
+                                  text="Legal Limit 0.08%", font=self.fonts['caption'],
+                                  fill=self.colors['red'])
+
+        # Enhanced DUI line (0.15%)
+        if 0.15 <= max_bac:
+            enhanced_y = height - padding - (0.15 / max_bac) * graph_height
+            self.canvas.create_line(padding, enhanced_y, width - padding, enhanced_y,
+                                  fill=self.colors['critical'], dash=(6, 4), width=2)
+            self.canvas.create_text(width - padding - 60, enhanced_y - 10,
+                                  text="Enhanced DUI 0.15%", font=self.fonts['caption'],
+                                  fill=self.colors['critical'])
         
         # Draw BAC curve
         if len(timeline) > 1:
@@ -472,23 +497,48 @@ class BACSimulatorGUI:
         minutes = (total_seconds % 3600) // 60
         return f"{hours}h {minutes}m"
 
+    def get_bac_color(self, bac: float) -> str:
+        """Get color for BAC level based on design system"""
+        if bac < 0.05:
+            return self.bac_colors['safe']
+        elif bac < 0.08:
+            return self.bac_colors['caution']
+        elif bac < 0.15:
+            return self.bac_colors['warning']
+        elif bac < 0.20:
+            return self.bac_colors['danger']
+        else:
+            return self.bac_colors['critical']
+
     def update_display(self):
         """Update all displays"""
         try:
             if self.profile_complete:
                 current_bac = self.calculator.calculate_bac_at_time()
                 impairment = self.calculator.get_impairment_level(current_bac)
-                
-                self.bac_label.config(text=f"{current_bac:.4f}%", fg=impairment['color'])
+
+                # Use design system colors
+                bac_color = self.get_bac_color(current_bac)
+
+                self.bac_label.config(text=f"{current_bac:.3f}%", fg=bac_color)
                 self.status_label.config(text=impairment['level'])
-                
-                legal_text = "Legal to drive" if impairment['fitness_to_drive'] == 'YES' else "Not legal to drive"
-                legal_color = self.colors['green'] if impairment['fitness_to_drive'] == 'YES' else self.colors['red']
+
+                # Update legal status with proper colors
+                if impairment['fitness_to_drive'] == 'YES':
+                    legal_text = "Safe to Drive"
+                    legal_color = self.colors['green']
+                elif impairment['fitness_to_drive'] == 'CAUTION':
+                    legal_text = "Caution Advised"
+                    legal_color = self.colors['caution']
+                else:
+                    legal_text = "Do NOT Drive"
+                    legal_color = self.colors['red']
+
                 self.legal_label.config(text=legal_text, fg=legal_color)
-                
+
                 self.draw_timeline_graph()
                 self.update_details()
-        except:
+        except Exception as e:
             pass
-        
+
         self.root.after(2000, self.update_display)  # Update every 2 seconds for responsiveness
