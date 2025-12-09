@@ -4,8 +4,11 @@ import { ToastProvider } from '@/components/ui/Toast';
 
 export const metadata: Metadata = {
   title: 'BAC Simulator - Blood Alcohol Calculator',
-  description: 'Scientifically accurate blood alcohol content simulator using the Widmark equation',
-  keywords: ['BAC', 'blood alcohol', 'calculator', 'drunk driving', 'alcohol metabolism'],
+  description: 'Scientifically accurate blood alcohol content simulator using the Widmark equation. Track drinks, food, and see your estimated BAC over time.',
+  keywords: ['BAC', 'blood alcohol', 'calculator', 'drunk driving', 'alcohol metabolism', 'Widmark equation', 'BAC calculator'],
+  authors: [{ name: 'BAC Simulator' }],
+  creator: 'BAC Simulator',
+  publisher: 'BAC Simulator',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -23,6 +26,31 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'default',
     title: 'BAC Simulator',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'BAC Simulator',
+    title: 'BAC Simulator - Blood Alcohol Calculator',
+    description: 'Track your drinks and estimate your Blood Alcohol Content using the scientifically accurate Widmark equation.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'BAC Simulator - Blood Alcohol Calculator',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BAC Simulator - Blood Alcohol Calculator',
+    description: 'Track your drinks and estimate your BAC using the Widmark equation.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

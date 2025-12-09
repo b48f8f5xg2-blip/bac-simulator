@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { UserProfile, Drink, Food, DrinkType, FoodType, STANDARD_DRINKS } from '@/lib/types';
 import { BACCalculator, createBACCalculator } from '@/lib/bac-calculator';
 import { ParsedMessage } from '@/lib/chatbot-parser';
@@ -102,9 +103,14 @@ export default function Home() {
       <header className="bg-secondary-500 text-white py-4 px-4 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-              <span className="text-xl font-bold">B</span>
-            </div>
+            <Image
+              src="/logo.svg"
+              alt="BAC Simulator Logo"
+              width={44}
+              height={44}
+              className="rounded-lg"
+              priority
+            />
             <div>
               <h1 className="text-xl font-bold">BAC Simulator</h1>
               <p className="text-xs text-primary-200">Blood Alcohol Calculator</p>
