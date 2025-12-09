@@ -12,22 +12,23 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "clsx": "^2.1.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.12.0",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.0",
+    "png-to-ico": "^3.0.1",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.0.0",
-    "vitest": "^2.0.0",
-    "@vitejs/plugin-react": "^4.0.0"
+    "vitest": "^2.0.0"
   }
 }

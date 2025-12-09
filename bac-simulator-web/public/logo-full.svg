@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Full Logo: Icon + Wordmark (Horizontal Layout) -->
+<svg width="480" height="120" viewBox="0 0 480 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon Container -->
+  <g transform="translate(10, 10)">
+    <!-- Background - Primary Teal -->
+    <rect width="100" height="100" rx="22" fill="#00BFAE"/>
+
+    <!-- Shield Shape - White -->
+    <path d="M50 12
+             C50 12 25.5 18.6 25.5 18.6
+             C25.5 18.6 25.5 47.6 25.5 52.3
+             C25.5 69.5 38.8 84.7 50 91.8
+             C61.2 84.7 74.5 69.5 74.5 52.3
+             C74.5 47.6 74.5 18.6 74.5 18.6
+             C74.5 18.6 50 12 50 12Z"
+          fill="white"/>
+
+    <!-- Pulse Wave Line -->
+    <path d="M25.5 52.3
+             L35.3 52.3
+             L40.2 52.3
+             L44.7 43.3
+             L49.2 60.5
+             L53.7 34.0
+             L58.2 55.9
+             L62.7 46.5
+             L66.6 52.3
+             L74.5 52.3"
+          stroke="#00BFAE"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="130" y="58" font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#004040">
+    BAC
+  </text>
+  <text x="130" y="95" font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="500" fill="#4A4A63">
+    Simulator
+  </text>
+</svg>

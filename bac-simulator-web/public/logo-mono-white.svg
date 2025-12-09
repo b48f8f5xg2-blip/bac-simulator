@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Monochrome Logo - White for dark backgrounds -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Shape Outline -->
+  <path d="M512 120
+           C512 120 260 188 260 188
+           C260 188 260 488 260 536
+           C260 712 396 868 512 940
+           C628 868 764 712 764 536
+           C764 488 764 188 764 188
+           C764 188 512 120 512 120Z"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="48"/>
+
+  <!-- Pulse Wave Line -->
+  <path d="M260 536
+           L360 536
+           L410 536
+           L456 444
+           L502 620
+           L548 348
+           L594 572
+           L640 476
+           L680 536
+           L764 536"
+        stroke="#FFFFFF"
+        stroke-width="40"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+</svg>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- iOS App Icon - No corner radius (iOS applies mask automatically) -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Primary Teal (full bleed for iOS) -->
+  <rect width="1024" height="1024" fill="#00BFAE"/>
+
+  <!-- Shield Shape - White with subtle shadow effect -->
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#004040" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Shield Shape - White -->
+  <path d="M512 120
+           C512 120 260 188 260 188
+           C260 188 260 488 260 536
+           C260 712 396 868 512 940
+           C628 868 764 712 764 536
+           C764 488 764 188 764 188
+           C764 188 512 120 512 120Z"
+        fill="white"
+        filter="url(#shadow)"/>
+
+  <!-- Pulse Wave Line through Shield -->
+  <path d="M260 536
+           L360 536
+           L410 536
+           L456 444
+           L502 620
+           L548 348
+           L594 572
+           L640 476
+           L680 536
+           L764 536"
+        stroke="#00BFAE"
+        stroke-width="40"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+
+  <!-- Pulse Wave Accent -->
+  <path d="M260 536
+           L360 536
+           L410 536
+           L456 444
+           L502 620
+           L548 348
+           L594 572
+           L640 476
+           L680 536
+           L764 536"
+        stroke="#004040"
+        stroke-width="14"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        opacity="0.25"/>
+</svg>

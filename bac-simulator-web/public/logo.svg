@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Primary Teal -->
+  <rect width="1024" height="1024" rx="224" fill="#00BFAE"/>
+
+  <!-- Shield Shape - White -->
+  <path d="M512 140C512 140 280 200 280 200C280 200 280 480 280 520C280 680 400 820 512 884C624 820 744 680 744 520C744 480 744 200 744 200C744 200 512 140 512 140Z"
+        fill="white"
+        fill-opacity="0.95"/>
+
+  <!-- Inner Shield Gradient Effect -->
+  <path d="M512 180C512 180 320 232 320 232C320 232 320 480 320 512C320 648 420 772 512 828C604 772 704 648 704 512C704 480 704 232 704 232C704 232 512 180 512 180Z"
+        fill="#00BFAE"
+        fill-opacity="0.15"/>
+
+  <!-- Pulse Wave Line - Primary Teal on White Shield -->
+  <path d="M280 520
+           L380 520
+           L420 520
+           L460 440
+           L500 600
+           L540 360
+           L580 560
+           L620 480
+           L660 520
+           L744 520"
+        stroke="#00BFAE"
+        stroke-width="36"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+
+  <!-- Pulse Wave Highlight -->
+  <path d="M280 520
+           L380 520
+           L420 520
+           L460 440
+           L500 600
+           L540 360
+           L580 560
+           L620 480
+           L660 520
+           L744 520"
+        stroke="#004040"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        opacity="0.3"/>
+</svg>
