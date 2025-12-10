@@ -6,6 +6,8 @@ import tkinter as tk
 from tkinter import scrolledtext, messagebox, ttk
 from datetime import datetime, timedelta
 import math
+import subprocess
+import os
 
 class BACSimulatorGUI:
     def __init__(self, root, calculator, chatbot):
@@ -16,13 +18,16 @@ class BACSimulatorGUI:
         self.root.geometry("1400x900")
         self.root.minsize(1200, 700)
 
-        # Design System Colors (matching web app)
+        # Design System Colors (matching web app exactly)
         self.colors = {
             'primary': '#00BFAE',          # Primary Teal
-            'primary_dark': '#004040',     # Dark Teal
-            'primary_light': '#E0F7F5',
+            'primary_dark': '#004040',     # Dark Teal (secondary)
+            'primary_light': '#E6FAF8',    # Primary-50 (matching web)
+            'primary_100': '#B3F0EB',      # Primary-100 (matching web)
             'neutral': '#BFBEBE',          # Light Neutral
             'neutral_bg': '#F3F4F6',       # Background
+            'neutral_100': '#F5F5F5',      # Neutral-100
+            'neutral_200': '#EEEEEE',      # Neutral-200 (chat bubbles)
             'accent': '#029922',           # Green Accent
             'slate': '#4A4A63',            # Dark Slate (text)
             'white': '#FFFFFF',
@@ -100,17 +105,15 @@ class BACSimulatorGUI:
         inner = tk.Frame(header, bg=self.colors['primary_dark'])
         inner.pack(fill=tk.BOTH, expand=True, padx=20)
 
-        # Left side: Logo placeholder + Title
+        # Left side: Logo + Title
         left = tk.Frame(inner, bg=self.colors['primary_dark'])
         left.pack(side=tk.LEFT, fill=tk.Y, pady=12)
 
-        # Logo placeholder (teal square with B)
-        logo_frame = tk.Frame(left, bg=self.colors['primary'], width=44, height=44)
-        logo_frame.pack(side=tk.LEFT, padx=(0, 12))
-        logo_frame.pack_propagate(False)
-        logo_label = tk.Label(logo_frame, text="B", font=('Helvetica', 20, 'bold'),
-                             bg=self.colors['primary'], fg=self.colors['white'])
-        logo_label.place(relx=0.5, rely=0.5, anchor='center')
+        # Logo - Shield with pulse wave (matching web app SVG)
+        logo_canvas = tk.Canvas(left, width=44, height=44, bg=self.colors['primary_dark'],
+                               highlightthickness=0)
+        logo_canvas.pack(side=tk.LEFT, padx=(0, 12))
+        self.draw_logo(logo_canvas, 44)
 
         # Title
         title_frame = tk.Frame(left, bg=self.colors['primary_dark'])
@@ -120,14 +123,65 @@ class BACSimulatorGUI:
         tk.Label(title_frame, text="Blood Alcohol Calculator", font=self.fonts['header_sub'],
                 bg=self.colors['primary_dark'], fg=self.colors['primary']).pack(anchor='w')
 
-        # Right side: Reset button
-        reset_btn = tk.Button(inner, text="Reset", font=self.fonts['body_small'],
+        # Right side: Screenshot and Reset buttons
+        btn_frame = tk.Frame(inner, bg=self.colors['primary_dark'])
+        btn_frame.pack(side=tk.RIGHT, pady=20)
+
+        screenshot_btn = tk.Button(btn_frame, text="📸 Screenshot", font=self.fonts['body_small'],
+                             bg=self.colors['primary_dark'], fg=self.colors['primary'],
+                             relief=tk.FLAT, bd=0, cursor='hand2',
+                             activebackground=self.colors['primary_dark'],
+                             activeforeground=self.colors['white'],
+                             command=self.take_screenshot)
+        screenshot_btn.pack(side=tk.LEFT, padx=(0, 15))
+
+        reset_btn = tk.Button(btn_frame, text="Reset", font=self.fonts['body_small'],
                              bg=self.colors['primary_dark'], fg=self.colors['primary'],
                              relief=tk.FLAT, bd=0, cursor='hand2',
                              activebackground=self.colors['primary_dark'],
                              activeforeground=self.colors['white'],
                              command=self.reset_scenario)
-        reset_btn.pack(side=tk.RIGHT, pady=20)
+        reset_btn.pack(side=tk.LEFT)
+
+    def draw_logo(self, canvas, size):
+        """Draw the shield + pulse wave logo matching web app SVG"""
+        # Background - rounded rectangle (teal)
+        r = size * 0.22  # Corner radius ratio from web SVG
+        canvas.create_rectangle(0, 0, size, size, fill=self.colors['primary'], outline='')
+
+        # Shield shape - simplified white shield
+        padding = size * 0.12
+        s = size - 2 * padding  # Inner size
+        cx = size / 2
+        top = padding + s * 0.05
+        bottom = padding + s * 0.95
+
+        # Shield points
+        shield_points = [
+            cx, top,                          # Top center
+            padding + s * 0.15, padding + s * 0.12,  # Top left
+            padding + s * 0.15, padding + s * 0.55,  # Left side
+            cx, bottom,                        # Bottom center
+            padding + s * 0.85, padding + s * 0.55,  # Right side
+            padding + s * 0.85, padding + s * 0.12,  # Top right
+        ]
+        canvas.create_polygon(shield_points, fill='white', outline='', smooth=True)
+
+        # Pulse wave line (ECG pattern)
+        wave_y = size * 0.52
+        wave_points = [
+            size * 0.08, wave_y,
+            size * 0.28, wave_y,
+            size * 0.36, wave_y - size * 0.10,
+            size * 0.44, wave_y + size * 0.12,
+            size * 0.52, wave_y - size * 0.18,
+            size * 0.60, wave_y + size * 0.06,
+            size * 0.68, wave_y - size * 0.04,
+            size * 0.76, wave_y,
+            size * 0.92, wave_y,
+        ]
+        canvas.create_line(wave_points, fill=self.colors['primary'], width=max(2, size * 0.04),
+                          capstyle='round', joinstyle='round', smooth=True)
 
     def create_card(self, parent, title=None):
         """Create a card container matching web app style"""
@@ -796,3 +850,53 @@ class BACSimulatorGUI:
             self.update_consumption_log()
             self.display_bot_message("Scenario cleared! Add new drinks and food anytime.")
             self.update_display()
+
+    def take_screenshot(self):
+        """Capture screenshot of the application window"""
+        try:
+            # Create screenshots directory if it doesn't exist
+            home_dir = os.path.expanduser("~")
+            screenshots_dir = os.path.join(home_dir, "Desktop", "BAC_Screenshots")
+            os.makedirs(screenshots_dir, exist_ok=True)
+
+            # Generate filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"BAC_Simulator_{timestamp}.png"
+            filepath = os.path.join(screenshots_dir, filename)
+
+            # Get window ID using AppleScript
+            self.root.update()
+            window_title = self.root.title()
+
+            # Use screencapture to capture the window
+            # -l captures a specific window, -o omits the shadow
+            # We'll use interactive mode to let user select the window
+            result = subprocess.run([
+                'screencapture',
+                '-i',  # Interactive mode - user selects window
+                '-o',  # No shadow
+                filepath
+            ], check=False)
+
+            if result.returncode == 0 and os.path.exists(filepath):
+                messagebox.showinfo(
+                    "Screenshot Saved",
+                    f"Screenshot saved to:\n{filepath}"
+                )
+                # Open the screenshots folder
+                subprocess.run(['open', screenshots_dir], check=False)
+            else:
+                # Fallback: Save to Desktop with simple screencapture
+                desktop_path = os.path.join(home_dir, "Desktop", filename)
+                subprocess.run(['screencapture', '-i', '-o', desktop_path], check=False)
+                if os.path.exists(desktop_path):
+                    messagebox.showinfo(
+                        "Screenshot Saved",
+                        f"Screenshot saved to Desktop:\n{filename}"
+                    )
+
+        except Exception as e:
+            messagebox.showerror(
+                "Screenshot Error",
+                f"Failed to capture screenshot:\n{str(e)}"
+            )

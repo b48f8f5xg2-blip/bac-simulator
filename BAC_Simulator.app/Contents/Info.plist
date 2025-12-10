@@ -30,5 +30,9 @@ For educational purposes only. Not for legal or medical decisions.</string>
 	<true/>
 	<key>NSRequiresIPhoneOS</key>
 	<false/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>BAC Simulator needs permission to capture screenshots for visual testing and documentation.</string>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>BAC Simulator needs permission to capture screenshots of the app window.</string>
 </dict>
 </plist>
